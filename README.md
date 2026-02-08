@@ -1,7 +1,7 @@
 # stock_price_fetcher
 fetch stock prices using yahoo finance
 
-usage: stock_cli.py [-h] [-a ADD [ADD ...]] [-r REMOVE [REMOVE ...]] [-f] [-p PATH] [-v]
+usage: stock_cli.py [-h] [-a ADD [ADD ...]] [-r REMOVE [REMOVE ...]] [-f] [-p PATH] [-v] [-t]
 
         Stock Market Data Fetcher CLI
         -----------------------------
@@ -18,9 +18,11 @@ usage: stock_cli.py [-h] [-a ADD [ADD ...]] [-r REMOVE [REMOVE ...]] [-f] [-p PA
 options:
   -h, --help            show this help message and exit
   -a ADD [ADD ...], --add ADD [ADD ...]
-                        Add one or more stock symbols to watchlist
+                        Add stocks to watchlist
   -r REMOVE [REMOVE ...], --remove REMOVE [REMOVE ...]
-                        Remove one or more stock symbols
-  -f, --fetch           Fetch current stock data and export JSON
-  -p PATH, --path PATH  Custom output path for JSON (Default: stock_data.json)
-  -v, --verbose         Show detailed processing information
+                        Remove stocks from watchlist
+  -f, --fetch           Fetch data and export JSON
+  -p PATH, --path PATH  Path for output JSON
+  -t TICKERS, --tickers TICKERS
+                        Path for tickers JSON
+  -v, --verbose         Show details
