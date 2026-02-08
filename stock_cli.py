@@ -1,8 +1,10 @@
+import yfinance as yf
 import json
 import os
 import argparse
 import sys
 from datetime import datetime
+from colorama import *
 
 # --- Smart Defaults ---
 # This line finds the folder where THIS .py file is actually saved
@@ -35,7 +37,8 @@ def log(message, is_verbose):
 
 def fetch_data(tickers, output_path, is_verbose):
     if not tickers:
-        print("Error: Watchlist is empty. Use -a to add stocks.")
+        # print("Error: Watchlist is empty. Use -a to add stocks.")
+        print(Fore.LIGHTRED_EX + "Error: Watchlist is empty. Use -a to add stocks." + Fore.RESET)
         return
 
     log(f"Connecting to Yahoo Finance API...", is_verbose)
@@ -43,7 +46,8 @@ def fetch_data(tickers, output_path, is_verbose):
     try:
         data = yf.download(tickers, period="1d", group_by='ticker', progress=False)
     except Exception as e:
-        print(f"Error: Network or API failure: {e}")
+        # print(f"Error: Network or API failure: {e}")
+        print(Fore.LIGHTRED_EX + f"Error: Network or API failure: {e}" + Fore.RESET)
         return
 
     results = []
@@ -73,18 +77,34 @@ def fetch_data(tickers, output_path, is_verbose):
             results.append(info)
             log(f"Processed {ticker}: ${info['close']}", is_verbose)
         except Exception as e:
-            log(f"Error parsing {ticker}: {e}", is_verbose)
+            # log(f"Error parsing {ticker}: {e}", is_verbose)
+            print(Fore.LIGHTRED_EX + f"Error parsing {ticker}: {e}", is_verbose + Fore.RESET)
 
     try:
         with open(output_path, 'w') as f:
             json.dump(results, f, indent=4)
-        print(f"Success. Data for {len(results)} stocks exported to:\n-> {output_path}")
+        # print(f"Success. Data for {len(results)} stocks exported to:\n-> {output_path}")
+        print(Fore.LIGHTGREEN_EX + f"Success. Data for {len(results)} stocks exported to:")
+        print(f"-> {output_path}" + Fore.RESET)
     except IOError as e:
-        print(f"Error writing to file: {e}")
+        # print(f"Error writing to file: {e}")
+        print(Fore.LIGHTRED_EX + f"Error writing to file: {e}" + Fore.RESET)
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Stock Market Data Fetcher CLI",
+        description="""
+        Stock Market Data Fetcher CLI
+        -----------------------------
+        A tool to manage a watchlist and fetch daily stock data to a JSON file.
+        
+        Examples:
+          python stock_cli.py                     (View status)
+          python stock_cli.py -a AAPL MSFT        (Add stocks)
+          python stock_cli.py -r MSFT             (Remove stock)
+          python stock_cli.py -f                  (Fetch data for watchlist)
+          python stock_cli.py -f -p ./my_data.json -v  (Fetch to specific path with logs)
+          python stock_cli.py -f -t ./tickers.json  (Fetch with specific tickers path)
+        """,
         formatter_class=argparse.RawTextHelpFormatter
     )
 
